@@ -14,6 +14,7 @@
     "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx}\""
   },
   "dependencies": {
+    "@mui/material": "^5.11.5",
     "@next/font": "13.1.3",
     "@types/node": "18.11.18",
     "@types/react": "18.0.27",
