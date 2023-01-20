@@ -13,14 +13,14 @@ export type Settings = {
   viral: boolean;
 };
 
-export type Image = {
+export type ImageType = {
   id: string;
   title: string;
   description: string;
   link: string;
 };
 
-export type ImageData = {
+export type ImageDataType = {
   id: string;
   title: string;
   description: string;
@@ -29,7 +29,7 @@ export type ImageData = {
   downs: number;
   score: number;
   images_count: number;
-  images: Image[];
+  images: ImageType[];
 };
 
 export const SettingsContext = createContext<SettingsContextValue>({

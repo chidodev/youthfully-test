@@ -5,13 +5,13 @@ import Grid from '@mui/material/Grid';
 import { useSettings } from '../hooks/useSettings';
 import Search from '../layouts/components/search';
 
-import { ImageData } from 'src/utils/types';
+import { ImageDataType } from 'src/utils/types';
 
 import ImageCard from 'src/layouts/components/card';
 
 const HomePage = () => {
   const { settings } = useSettings();
-  const [imageDataList, setImageDataList] = useState<ImageData[]>([]);
+  const [imageDataList, setImageDataList] = useState<ImageDataType[]>([]);
 
   const fetchImageData = async () => {
     const response = await fetch(
@@ -23,15 +23,15 @@ const HomePage = () => {
       },
     );
 
-    const result: ImageData[] = await response.json();
-
-    setImageDataList((prev) => [...prev, ...result]);
+    const result: any = await response.json();
+    const imageResult = result.success ? result.data : [];
+    setImageDataList((prev) => [...prev, ...imageResult]);
   };
 
   useEffect(() => {
     fetchImageData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [settings]);
+  }, []);
 
   return (
     <>
@@ -47,10 +47,8 @@ const HomePage = () => {
           },
         }}
       >
-        {imageDataList.map((card: ImageData, index: number) => (
-          <Grid key={index} item xs={12} md={4}>
-            <ImageCard {...card} />
-          </Grid>
+        {imageDataList.map((card: ImageDataType, index: number) => (
+          <ImageCard key={index} {...card} />
         ))}
       </Grid>
     </>

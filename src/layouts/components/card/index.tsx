@@ -1,66 +1,41 @@
-import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
-import Button from '@mui/material/Button';
-import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
 import CardContent from '@mui/material/CardContent';
-import CardHeader from '@mui/material/CardHeader';
 import CardMedia from '@mui/material/CardMedia';
-import CardActions from '@mui/material/CardActions';
+import Grid from '@mui/material/Grid';
 
-import { ImageData, Image } from '@/src/utils/types';
+import { ImageDataType, ImageType } from '@/src/utils/types';
 
-const ImageCard = (props: ImageData) => {
-  // ** Props
-  const { title, description, link, ups } = props;
+const ImageCard = (props: ImageDataType) => {
+  const { title, description, images_count, link, ups, images } = props;
+
+  const isImgUrl = (url: string) => {
+    return /\.(jpg|jpeg|png|webp|avif|gif)$/.test(url);
+  };
 
   return (
-    <Card sx={{ padding: 1.5 }}>
-      <CardHeader
-        avatar={<Avatar alt="" src="/images/logos/icon.png" />}
-        title={title}
-        titleTypographyProps={{ variant: 'h5' }}
-      />
-      <CardContent>
-        <Box
-          sx={{
-            marginTop: 1.5,
-            display: 'flex',
-            flexWrap: 'wrap',
-            marginBottom: 1.5,
-            alignItems: 'flex-start',
-          }}
-        >
-          <CardMedia
-            component="img"
-            alt=""
-            height="140"
-            image={link}
-            sx={{
-              borderRadius: '7px',
-            }}
-          />
-        </Box>
-        <Typography mt={5} variant="body1">
-          {description}
-        </Typography>
-      </CardContent>
-      <CardActions>
-        <Button
-          sx={{
-            marginTop: 1.5,
-            width: '100%',
-            padding: '15px',
-            borderRadius: 100,
-            background: `linear-gradient(0, #A9AFFC, #9155FD 65%)`,
-          }}
-          size="small"
-          variant="contained"
-        >
-          {ups}
-        </Button>
-      </CardActions>
-    </Card>
+    <>
+      {images_count && isImgUrl(images[0].link) && (
+        <Grid item xs={12} md={4}>
+          <Card>
+            <CardContent>
+              <CardMedia
+                component="img"
+                alt=""
+                height="140"
+                image={images[0].link}
+                sx={{
+                  borderRadius: '7px',
+                }}
+              />
+              <Typography mt={5} variant="body1">
+                {images[0].description || 'No descriptin'}
+              </Typography>
+            </CardContent>
+          </Card>
+        </Grid>
+      )}
+    </>
   );
 };
 
