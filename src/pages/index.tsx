@@ -1,20 +1,37 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
-// import Box from '@mui/material/Box';
-// import Typography from '@mui/material/Typography';
-// import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 
 import { useSettings } from '../hooks/useSettings';
 import Search from '../layouts/components/search';
 
-import { ImageData, Image } from 'src/utils/types';
+import { ImageData } from 'src/utils/types';
 
 import ImageCard from 'src/layouts/components/card';
 
 const HomePage = () => {
   const { settings } = useSettings();
   const [imageDataList, setImageDataList] = useState<ImageData[]>([]);
+
+  const fetchImageData = async () => {
+    const response = await fetch(
+      `${process.env.apiUrl}/${settings.section}/${settings.sort}/${settings.window}/${settings.page}?showViral=${settings.viral}`,
+      {
+        headers: {
+          Authorization: `Client-ID ${process.env.clientID}`,
+        },
+      },
+    );
+
+    const result: ImageData[] = await response.json();
+
+    setImageDataList((prev) => [...prev, ...result]);
+  };
+
+  useEffect(() => {
+    fetchImageData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [settings]);
 
   return (
     <>
