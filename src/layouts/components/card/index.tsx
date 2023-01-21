@@ -2,12 +2,11 @@ import { useState } from 'react';
 import Card from '@mui/material/Card';
 import Typography from '@mui/material/Typography';
 import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import ImageEnlarger from '../image';
 
-import { ImageDataType, ImageType } from '@/src/utils/types';
+import { ImageDataType } from '@/src/utils/types';
 
 const ImageCard = (props: ImageDataType) => {
   const { title, description, images_count, score, ups, downs, images } = props;
@@ -17,7 +16,8 @@ const ImageCard = (props: ImageDataType) => {
   };
 
   const [zoomed, setZoomed] = useState(false);
-  return (
+  
+return (
     <>
       {images_count && isImgUrl(images[0].link) && (
         <Grid item xs={12} md={4}>

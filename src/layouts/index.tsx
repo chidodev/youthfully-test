@@ -1,10 +1,8 @@
-// ** React Imports
 import { ReactNode } from 'react';
 import Box, { BoxProps } from '@mui/material/Box';
 import { styled } from '@mui/material/styles';
 
 import AppBar from './components/appBar';
-
 import AppBarContent from './components/appBar/AppBarContent';
 
 interface Props {
@@ -36,11 +34,12 @@ const ContentWrapper = styled('main')(({ theme }) => ({
 }));
 
 const Layout = ({ children }: Props) => {
-  return (
+  
+return (
     <LayoutWrapper className="layout-wrapper">
       <MainContentWrapper className="layout-content-wrapper">
         <AppBar appBarContent={AppBarContent} />
-
+      
         <ContentWrapper
           className="layout-page-content"
           sx={{

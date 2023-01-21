@@ -25,8 +25,6 @@ export interface ImageEnlargerProps extends React.HTMLAttributes<any> {
 }
 
 const initialTransform = 'translateX(0px) translateY(0px) scale(1)';
-const getScale = linearConversion([0, 400], [1, 0.4]);
-const scaleClamp = clamp(0.4, 1);
 
 /**
  * Image component
@@ -50,7 +48,6 @@ const ImageEnlarger: React.FunctionComponent<ImageEnlargerProps> = ({
 }) => {
   const ref = React.useRef<HTMLImageElement>(null);
   const prevZoom = usePrevious(zoomed);
-  const [animating, setAnimating] = React.useState(false);
   const cloneRef = React.useRef<any>(null);
   const [cloneLoaded, setCloneLoaded] = React.useState(false);
   const prevCloneLoaded = usePrevious(cloneLoaded);
@@ -91,7 +88,7 @@ const ImageEnlarger: React.FunctionComponent<ImageEnlargerProps> = ({
   }));
 
   const generatePositions = React.useCallback(
-    (immediate: boolean = false) => {
+    (immediate = false) => {
       // any time this prop changes, we update our position
       if (ref.current && cloneLoaded) {
         const rect = ref.current.getBoundingClientRect();
@@ -133,7 +130,6 @@ const ImageEnlarger: React.FunctionComponent<ImageEnlargerProps> = ({
             top: clonedDimensions.y,
             width: clonedDimensions.w,
             height: clonedDimensions.h,
-            onRest: () => {},
           });
 
           set({
@@ -143,7 +139,6 @@ const ImageEnlarger: React.FunctionComponent<ImageEnlargerProps> = ({
 
           // handle zooming out
         } else if (zoomingOut) {
-          setAnimating(true);
 
           set({
             transform: `translateX(${initialSize.translateX}px) translateY(${initialSize.translateY}px) scale(${initialSize.scale})`,
@@ -151,7 +146,7 @@ const ImageEnlarger: React.FunctionComponent<ImageEnlargerProps> = ({
             onRest: () => {
               setThumbProps({ opacity: 1, immediate: true });
               set({ opacity: 0, immediate: true });
-              setAnimating(false);
+              
             },
           });
 
@@ -164,7 +159,6 @@ const ImageEnlarger: React.FunctionComponent<ImageEnlargerProps> = ({
             top: clonedDimensions.y,
             width: clonedDimensions.w,
             height: clonedDimensions.h,
-            onRest: () => {},
           });
         }
 
@@ -186,16 +180,17 @@ const ImageEnlarger: React.FunctionComponent<ImageEnlargerProps> = ({
   // this should probably be debounced
   const onResize = React.useCallback(() => {
     generatePositions(true);
-  }, [zoomed, cloneLoaded, ref, prevCloneLoaded, prevZoom]);
+  }, [zoomed, generatePositions, cloneLoaded, ref, prevCloneLoaded, prevZoom]);
 
   // update our various positions
   React.useEffect(() => {
     generatePositions();
     if (zoomed) window.addEventListener('resize', onResize);
-    return () => {
+    
+return () => {
       window.removeEventListener('resize', onResize);
     };
-  }, [zoomed, cloneLoaded, ref, prevCloneLoaded, prevZoom]);
+  }, [zoomed, onResize, cloneLoaded, ref, prevCloneLoaded, prevZoom]);
 
   return (
     <React.Fragment>
@@ -297,7 +292,8 @@ function getInitialClonedDimensions(o: PositionType, t: PositionType) {
   const scale = o.w / t.w;
   const translateX = o.x + o.w / 2 - (t.x + t.w / 2);
   const translateY = o.y + o.h / 2 - (t.y + t.h / 2);
-  return {
+  
+return {
     scale,
     translateX,
     translateY,
@@ -318,7 +314,8 @@ function getTargetDimensions(iw: number, ih: number, padding = 0) {
   const target = scaleToBounds(iw, ih, vp.width - padding, vp.height - padding);
   const left = vp.width / 2 - target.width / 2;
   const top = vp.height / 2 - target.height / 2;
-  return {
+  
+return {
     x: left,
     y: top,
     w: target.width,
@@ -339,7 +336,8 @@ function getTargetDimensions(iw: number, ih: number, padding = 0) {
 function scaleToBounds(ow: number, oh: number, mw: number, mh: number) {
   let scale = Math.min(mw / ow, mh / oh);
   if (scale > 1) scale = 1;
-  return {
+  
+return {
     width: ow * scale,
     height: oh * scale,
   };
@@ -355,33 +353,6 @@ function getViewport() {
   }
 
   return { width: 0, height: 0 };
-}
-
-/**
- * Create a basic linear conversion fn
- */
-
-function linearConversion(a: [number, number], b: [number, number]) {
-  const o = a[1] - a[0];
-  const n = b[1] - b[0];
-
-  return function (x: number) {
-    return ((x - a[0]) * n) / o + b[0];
-  };
-}
-
-/**
- * Create a clamp
- * @param max
- * @param min
- */
-
-function clamp(min: number, max: number) {
-  return function (x: number) {
-    if (x > max) return max;
-    if (x < min) return min;
-    return x;
-  };
 }
 
 export default ImageEnlarger;

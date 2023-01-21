@@ -1,4 +1,4 @@
-import { ChangeEvent, forwardRef, MouseEvent, useState } from 'react';
+import { useState } from 'react';
 
 import Card from '@mui/material/Card';
 import Grid from '@mui/material/Grid';
@@ -12,28 +12,67 @@ import FormControl from '@mui/material/FormControl';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 
-import Select, { SelectChangeEvent } from '@mui/material/Select';
+import Select from '@mui/material/Select';
 
-import { Section, Sort, Window } from '@/src/utils/types';
+import { Settings } from '@/src/utils/types';
 
-import { initialSettings } from '@/src/utils/constants';
 
-interface State {
-  section: Section;
-  sort: Sort;
-  window: Window;
-  viral: boolean;
+interface Props {
+  settings: Settings
+  saveSettings: (updatedSettings: Settings) => void
 }
 
-const Search = () => {
-  const initialState: State = initialSettings;
+const Search = ({settings, saveSettings}: Props) => {
+  const initialState: Settings = settings;
 
-  const [values, setValues] = useState<State>(initialState);
+  const [values, setValues] = useState<Settings>(initialState);
+
+  const handleSearch = () => {
+    saveSettings(values)
+  }
+
+  const handleSectionChange = (e: any) => {
+
+    setValues(prev => {
+      return {
+        ...prev,
+        section: e.target.value
+      }
+    })
+  }
+
+  const handleSortChange = (e: any) => {
+    setValues(prev => {
+      return {
+        ...prev,
+        sort: e.target.value
+      }
+    })
+  }
+
+  const handleWindowChange = (e: any) => {
+    setValues(prev => {
+      return {
+        ...prev,
+        window: e.target.value
+      }
+    })
+  }
+
+  const handleViralChange = () => {
+    
+    setValues(prev => {
+      return {
+        ...prev,
+        viral: !prev.viral
+      }
+    })
+    
+  }
 
   return (
     <Card>
-      <form onSubmit={(e) => e.preventDefault()}>
-        <CardContent>
+      <CardContent>
           <Grid container spacing={5}>
             <Grid item xs={12} sm={4}>
               <FormControl fullWidth>
@@ -44,6 +83,8 @@ const Search = () => {
                   Section
                 </InputLabel>
                 <Select
+                  value={values.section}
+                  onChange={handleSectionChange}
                   size="small"
                   label="Section"
                   defaultValue=""
@@ -66,6 +107,8 @@ const Search = () => {
                   Sort
                 </InputLabel>
                 <Select
+                  value={values.sort}
+                  onChange={handleSortChange}
                   size="small"
                   label="Sort"
                   defaultValue=""
@@ -89,6 +132,8 @@ const Search = () => {
                   Window
                 </InputLabel>
                 <Select
+                  value={values.window}
+                  onChange={handleWindowChange}
                   size="small"
                   label="Window"
                   defaultValue=""
@@ -105,7 +150,7 @@ const Search = () => {
             <Grid item xs={6}>
               <FormControlLabel
                 label="Viral Images"
-                control={<Checkbox name="form-layouts-alignment-checkbox" />}
+                control={<Checkbox onClick={handleViralChange} value={values.viral} name="form-layouts-alignment-checkbox" />}
                 sx={{
                   whiteSpace: 'nowrap',
                   '& .MuiButtonBase-root': { paddingTop: 0, paddingBottom: 0 },
@@ -115,14 +160,14 @@ const Search = () => {
 
             <Grid item xs={6}>
               <FormControl sx={{ float: 'right' }}>
-                <Button size="small" type="submit" variant="contained">
-                  Submit
+                <Button size="small" variant="contained" onClick={handleSearch}>
+                  Search
                 </Button>
               </FormControl>
             </Grid>
           </Grid>
         </CardContent>
-      </form>
+    
     </Card>
   );
 };

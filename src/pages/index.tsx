@@ -10,12 +10,14 @@ import { ImageDataType } from 'src/utils/types';
 import ImageCard from 'src/layouts/components/card';
 
 const HomePage = () => {
-  const { settings } = useSettings();
+  const { settings, saveSettings } = useSettings()
+  const [page, setPage] = useState(1)
+
   const [imageDataList, setImageDataList] = useState<ImageDataType[]>([]);
 
-  const fetchImageData = async () => {
+  const fetchNextPageImageData = async () => {
     const response = await fetch(
-      `${process.env.apiUrl}/${settings.section}/${settings.sort}/${settings.window}/${settings.page}?showViral=${settings.viral}`,
+      `${process.env.apiUrl}/${settings.section}/${settings.sort}/${settings.window}/${page}?showViral=${settings.viral}`,
       {
         headers: {
           Authorization: `Client-ID ${process.env.clientID}`,
@@ -28,14 +30,36 @@ const HomePage = () => {
     setImageDataList((prev) => [...prev, ...imageResult]);
   };
 
+  const fetchSearchImageData = async () => {
+    const response = await fetch(
+      `${process.env.apiUrl}/${settings.section}/${settings.sort}/${settings.window}/${page}?showViral=${settings.viral}`,
+      {
+        headers: {
+          Authorization: `Client-ID ${process.env.clientID}`,
+        },
+      },
+    );
+
+    const result: any = await response.json();
+    const imageResult = result.success ? result.data : [];
+    setImageDataList(imageResult);
+  };
+
   useEffect(() => {
-    fetchImageData();
+    
+    fetchSearchImageData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [settings]);
+
+  useEffect(() => {
+    
+    fetchNextPageImageData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [page]);
 
   return (
     <>
-      <Search />
+      <Search settings={settings} saveSettings={saveSettings} />
 
       <Grid
         container
