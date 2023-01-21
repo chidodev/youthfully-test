@@ -9,7 +9,6 @@ export type Settings = {
   section: Section;
   sort: Sort;
   window: Window;
-  page: number;
   viral: boolean;
 };
 

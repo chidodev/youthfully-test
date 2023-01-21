@@ -1,5 +1,4 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
-
+Youthfully Test
 ## Getting Started
 
 First, run the development server:
@@ -8,31 +7,38 @@ First, run the development server:
 npm run dev
 # or
 yarn dev
+```
+Second, build production:
+```bash
+npm run build
 # or
-pnpm dev
+yarn build
+```
+Third, run production:
+```bash
+npm start
+# or
+yarn start
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://192.168.xxx.xxx:3000](http://192.168.xxx.xxx:3000) with your browser to see the result.
+Don't use `localhost` or `127.0.0.1`, must use IP4 address to make sure imgur API works.
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+## Techincal Stack Comment
+- Used `Next.js` to make use of `SSR` and advantage of `Next.js`
+- Used `emotion cache` to improve performance
+- Used `MaterialUI` to facilitate development
+- Used `Typescript` and `prettier-eslint` to write clean code
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+## Architectural Comment
+Focused on architectural solution to improve scalability and performance
+- First of all, defined `ThemeOption` with several options
+- Defined Global `Styles`
+- Built responsive `Layout` adding `Navbar` and `Content Area`
+- Combinated `emotion` and `SSR`
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+## Future Improvements
+Imgur API response per request is too much to list at once for clientside. So we can split response and add infinite scrolling pretending to sending request to Imgur frequently.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Or we can create our own backend to move fast.
+Of course, it would be better to improve styling 😁
